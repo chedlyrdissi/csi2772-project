@@ -1,0 +1,6 @@
+class Blue {
+
+}
+
+#pragma once
+

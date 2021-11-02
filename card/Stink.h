@@ -1,0 +1,6 @@
+class Stink {
+
+}
+
+#pragma once
+

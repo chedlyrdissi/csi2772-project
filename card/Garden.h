@@ -1,0 +1,6 @@
+class Garden {
+
+}
+
+#pragma once
+

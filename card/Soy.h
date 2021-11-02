@@ -1,0 +1,6 @@
+class Soy {
+
+}
+
+#pragma once
+

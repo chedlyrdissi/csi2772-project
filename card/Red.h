@@ -1,0 +1,6 @@
+class Red {
+
+}
+
+#pragma once
+

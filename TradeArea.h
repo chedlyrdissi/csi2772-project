@@ -1,0 +1,5 @@
+class TradeArea {
+	
+}
+
+#pragram once

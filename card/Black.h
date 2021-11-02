@@ -1,0 +1,6 @@
+class Black {
+
+}
+
+#pragma once
+
