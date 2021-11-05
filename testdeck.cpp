@@ -26,9 +26,9 @@ int main() {
 	Blue bl;
 	d.push_back(&b);
 	d.push_back(&bl);
-	cout << top() << endl;
+	cout << *(d.top()) << endl;
 	cout << d[0]->getName() << " " << d[1]->getName() << endl;
-	cout << pickUp() << endl;
+	cout << *(d.pickUp()) << endl;
 	cout << d.size() << endl;
 	cout << d[0]->getName() << endl;
 }

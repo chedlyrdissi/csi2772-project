@@ -4,36 +4,36 @@
 
 class DiscardPile: public std::vector<Card*> {
 public:
-	DiscardPile(istream&, const CardFactory*);
+	DiscardPile(std::istream&, const CardFactory*);
 	DiscardPile& operator+=(Card*);
 	Card* pickUp();
 	Card* top();
 	void print(std::ostream&);
 	friend std::istream& operator>>(std::istream&, DiscardPile&);
-}
+};
 
 
-DiscardPile(std::istream& in, const CardFactory* cf) {
+DiscardPile::DiscardPile(std::istream& in, const CardFactory* cf) {
 	// TODO implement 
 }
 
-DiscardPile& operator+=(Card* card) {
+DiscardPile& DiscardPile::operator+=(Card* card) {
 	push_back(card);
 	return *this;
 }
 
-Card* pickUp() {
+Card* DiscardPile::pickUp() {
 	Card* c = back();
 	pop_back();
 	return c;
 }
 
-Card* top() {
+Card* DiscardPile::top() {
 	return back();
 }
 
-void print(std::ostream& os) {
-	os << "DiscardPile" << endl;
+void DiscardPile::print(std::ostream& os) {
+	os << "DiscardPile" << std::endl;
 	for(int i=0; i<size(); i++) {
 		os << *((*this)[i]) << std::endl;
 	}
