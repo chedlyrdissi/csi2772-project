@@ -1,5 +1,0 @@
-class Chain {
-	
-}
-
-#pragram once
