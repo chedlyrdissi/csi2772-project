@@ -4,6 +4,7 @@
 
 class DiscardPile: public std::vector<Card*> {
 public:
+	DiscardPile() {};
 	DiscardPile(std::istream&, const CardFactory*);
 	DiscardPile& operator+=(Card*);
 	Card* pickUp();
@@ -34,8 +35,8 @@ Card* DiscardPile::top() {
 
 void DiscardPile::print(std::ostream& os) {
 	os << "DiscardPile" << std::endl;
-	for(int i=0; i<size(); i++) {
-		os << *((*this)[i]) << std::endl;
+	for (Card* c : *this) {
+		os << *c << std::endl;
 	}
 }
 

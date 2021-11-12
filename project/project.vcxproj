@@ -156,6 +156,7 @@
     <ClInclude Include="Hand.h" />
     <ClInclude Include="NotEnoughCoins.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Table.h" />
     <ClInclude Include="TradeArea.h" />
   </ItemGroup>
   <ItemGroup>

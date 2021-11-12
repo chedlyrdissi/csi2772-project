@@ -6,6 +6,7 @@
 #include "./card/Red.h"
 #include "./card/Green.h"
 #include "./card/Blue.h"
+#include "Table.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ int main() {
 	Red r;
 	Green g;
 	Blue bl;
+	/*
 	Hand h(std::cin, NULL);
 	h += &b;
 	cout << h << endl;
@@ -29,13 +31,20 @@ int main() {
 	cout << h << endl;
 	cout << "top " << *(h.top()) << endl;
 	cout << h << endl;
+	*/
+	Chain<Blue> cb;
+	cb += &bl;
+	Chain<Red> cr;
+	cr += &r;
+	cr += &r;
+	cr += &r;
+	cout << cb << endl;
+	cout << cr << endl;
 	string name = "player";
 	Player p(name);
+	p[0] += &b;
+	p[0] += &b;
+	p[0] += &b;
+	p[1] += &r;
 	cout << p << endl;
-
-	/*
-	for (int i = 0; i < 8; i++) {
-		cout << *(h[i]) << " ";
-	}
-	*/
 }
