@@ -36,9 +36,6 @@
     <ClInclude Include="TradeArea.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="card\Black.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="card\Blue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,16 +45,10 @@
     <ClInclude Include="card\Chili.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="card\Garden.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="card\Green.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="card\Red.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="card\Soy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="card\Stink.h">
@@ -75,9 +66,21 @@
     <ClInclude Include="Table.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="card\black.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="card\garden.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="card\soy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CardGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

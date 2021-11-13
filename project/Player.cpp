@@ -2,7 +2,7 @@
 #include <string>
 #include "player.h"
 #include "Hand.h"
-#include "./card/Black.h"
+#include "./card/black.h"
 #include "./card/Red.h"
 #include "./card/Green.h"
 #include "./card/Blue.h"
@@ -10,8 +10,8 @@
 
 using namespace std;
 
-int main() {
-	Black b;
+int main2() {
+	black b;
 	Red r;
 	Green g;
 	Blue bl;
@@ -47,4 +47,5 @@ int main() {
 	p[0] += &b;
 	p[1] += &r;
 	cout << p << endl;
+	return 0;
 }

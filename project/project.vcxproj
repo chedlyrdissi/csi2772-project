@@ -139,14 +139,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CardFactory.h" />
-    <ClInclude Include="card\Black.h" />
+    <ClInclude Include="card\black.h" />
     <ClInclude Include="card\Blue.h" />
     <ClInclude Include="card\Card.h" />
     <ClInclude Include="card\Chili.h" />
-    <ClInclude Include="card\Garden.h" />
+    <ClInclude Include="card\garden.h" />
     <ClInclude Include="card\Green.h" />
     <ClInclude Include="card\Red.h" />
-    <ClInclude Include="card\Soy.h" />
+    <ClInclude Include="card\soy.h" />
     <ClInclude Include="card\Stink.h" />
     <ClInclude Include="chain\Chain.h" />
     <ClInclude Include="chain\Chain_Base.h" />
@@ -160,6 +160,7 @@
     <ClInclude Include="TradeArea.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CardGame.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

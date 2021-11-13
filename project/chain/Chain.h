@@ -23,10 +23,28 @@ public:
 		this->cards = chain.cards;
 		return *this;
 	}
-	int sell();
+	int sell() {
+		int coins = 0;
+		if (!isEmpty()) {
+			int cardsPerCoin;
+			for (int necessaryCoins = 4; necessaryCoins > 0; necessaryCoins--) {
+				// TODO does it leave cards in chain or sell all or nothing
+				cardsPerCoin = cards[0]->getCardsPerCoin(necessaryCoins);
+				if (cards.size() >= cardsPerCoin) {
+					coins = necessaryCoins;
+					for (int i = 0; i < cardsPerCoin; i++) {
+						cards.pop_back();
+					}
+				}
+			}
+		}
+		return coins;
+	};
+	
 	bool isEmpty() {
 		return cards.empty();
 	};
+	
 	std::string getChainName() {
 		return ((Card*) cards[0])->getName();
 	};
@@ -40,24 +58,5 @@ public:
 		return os;
 	}
 };
-
-template <class T>
-int Chain<T>::sell() {
-	int coins = 0;
-	if (!isEmpty()) {
-		int cardsPerCoin;
-		for (int necessaryCoins = 4; necessaryCoins > 0; necessaryCoins--) {
-			// TODO does it leave cards in chain or sell all or nothing
-			cardsPerCoin = cards[0]->getCardsPerCoin(necessaryCoins)
-			if (cards.size() >= cardsPerCoin) {
-				coins = necessaryCoins;
-				for (int i = 0; i < cardsPerCoin; i++) {
-					cards.pop_back();
-				}
-			}
-		}
-	}
-	return coins;
-}
 
 #pragma once

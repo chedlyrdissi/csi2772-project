@@ -1,5 +1,5 @@
 class Coins {
-	
-}
 
-#pragram once
+};
+
+#pragma once
