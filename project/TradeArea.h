@@ -9,13 +9,16 @@ public:
 	std::list<Card*> cards;
 
 	TradeArea() {};
+	
 	TradeArea(std::istream& in, const CardFactory* cf) {
 		// TODO implement
 	}
+
 	TradeArea& operator+=(Card* c) {
 		cards.push_back(c);
 		return *this;
 	};
+
 	bool legal(Card* card) {
 		for (Card* c : cards) {
 			if ((*c).getName() == (*card).getName()) {
@@ -24,6 +27,18 @@ public:
 		}
 		return false;
 	}
+
+	/*
+	Card* operator[](int i) {
+		assert(i >= 0 && i < cards.size());
+		return cards[i];
+	}
+	*/
+
+	std::list<Card*>& getList() {
+		return cards;
+	}
+
 	Card* trade(std::string s) {
 		Card* card = NULL;
 		for (Card* c : cards) {
@@ -32,17 +47,16 @@ public:
 				break;
 			}
 		}
-		if (card == NULL) {
-			// idk
-		}
-		else {
+		if (card != NULL) {
 			cards.remove(card);
 		}
 		return card;
 	}
+
 	int numCards() {
 		return cards.size();
 	};
+
 	friend std::ostream& operator <<(std::ostream& os, const TradeArea& tradeArea) {
 		for (Card* c : tradeArea.cards) {
 			os << *c << " ";

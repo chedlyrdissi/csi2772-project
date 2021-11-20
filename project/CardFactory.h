@@ -1,5 +1,4 @@
 #include "Deck.h"
-/*
 #include "./card/black.h"
 #include "./card/Red.h"
 #include "./card/Green.h"
@@ -7,7 +6,6 @@
 #include "./card/Chili.h"
 #include "./card/garden.h"
 #include "./card/soy.h"
-*/
 #include "./card/Stink.h"
 #include <algorithm>    // std::shuffle
 #include <random>       // std::default_random_engine
@@ -16,8 +14,12 @@
 
 class CardFactory {
 	Deck deck;
-	// static CardFactory* instance;
+
 	CardFactory() {
+		init();
+	};
+	
+	void init() {
 		/*
 			Blue 20
 			Chili 18
@@ -28,15 +30,12 @@ class CardFactory {
 			Red 8
 			garden 6
 		*/
-		/*
 		for (int i = 0; i < 20; i++) {
 			deck.push_back(new Blue());
 		}
 		for (int i = 0; i < 18; i++) {
 			deck.push_back(new Chili());
 		}
-		*/
-		/*
 		for (int i = 0; i < 16; i++) {
 			deck.push_back(new Stink());
 		}
@@ -52,18 +51,16 @@ class CardFactory {
 		for (int i = 0; i < 8; i++) {
 			deck.push_back(new Red());
 		}
-		for (int i = 0; i < 60; i++) {
+		for (int i = 0; i < 6; i++) {
 			deck.push_back(new garden());
 		}
-		*/
-		};
+	}
 public:
 	static CardFactory* getFactory() {
-		// if (instance == NULL)
-		//	instance = new CardFactory();
 		static CardFactory* instance = new CardFactory();
 		return instance;
 	};
+
 	~CardFactory() {
 		for (Card* card : deck) {
 			delete card;
@@ -75,7 +72,7 @@ public:
 		std::shuffle to achieve this.
 	*/
 	Deck getDeck() {
-		unsigned int seed = 0; // time(NULL); //std::chrono::system_clock::now().time_since_epoch().count();
+		unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
 		std::shuffle(deck.begin(), deck.end(), std::default_random_engine(seed));
 		return deck;
 	};

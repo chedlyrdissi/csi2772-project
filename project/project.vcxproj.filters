@@ -75,11 +75,11 @@
     <ClInclude Include="card\soy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IllegalType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CardGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

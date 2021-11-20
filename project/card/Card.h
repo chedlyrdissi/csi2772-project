@@ -11,9 +11,11 @@ public:
 		card.print(os);
 		return os;
 	};
+	/*
 	static bool compareCard(const Card* c1, const Card* c2) {
 		return c1->getName().compare(c2->getName()) > 0;
 	}
+	*/
 };
 
 #pragma once

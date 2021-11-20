@@ -8,12 +8,10 @@ class garden : public virtual Card {
 public:
 	int getCardsPerCoin(int coins) {
 		assert((coins >= 0 && coins < 5));
-		int cards = 0;
+		int cards = 999;
 		switch (coins) {
-		case 1: cards = 0; break;
 		case 2: cards = 2; break;
 		case 3: cards = 3; break;
-		case 4: cards = 0; break;
 		}
 		return cards;
 	};

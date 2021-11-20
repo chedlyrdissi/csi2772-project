@@ -21,14 +21,14 @@ public:
 		return back();
 	}
 	void print(std::ostream& os) {
-		os << "DiscardPile" << std::endl;
+		os << "DiscardPile: ";
 		for (Card* c : *this) {
 			os << *c << std::endl;
 		}
 	};
-	friend std::istream& operator>>(std::istream& in, DiscardPile& discardPile) {
-		// TODO implement
-		return in;
+	friend std::ostream& operator <<(std::ostream& os, DiscardPile& discardPile) {
+		os << "DiscardPile " << discardPile.top();
+		return os;
 	};
 };
 

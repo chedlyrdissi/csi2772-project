@@ -154,6 +154,7 @@
     <ClInclude Include="Deck.h" />
     <ClInclude Include="DiscardPile.h" />
     <ClInclude Include="Hand.h" />
+    <ClInclude Include="IllegalType.h" />
     <ClInclude Include="NotEnoughCoins.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Table.h" />
@@ -161,7 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardGame.cpp" />
-    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
