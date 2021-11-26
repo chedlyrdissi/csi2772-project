@@ -16,6 +16,11 @@ public:
 	
 	Chain(std::istream& in, const CardFactory* cf) {
 		// TODO implement
+		std::cout << "reading chain\n";
+	}
+
+	int size() {
+		return cards.size();
 	}
 
 	void discard(DiscardPile& pile) {

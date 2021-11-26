@@ -3,6 +3,8 @@
 #include <list>
 #include <assert.h>
 
+#include <iostream>
+
 class Hand : public std::list<Card*> {
 	// front | . | . | . | back
 	// std::list<Card*> cards;
@@ -11,6 +13,16 @@ public:
 	
 	Hand(std::istream& in, const CardFactory* cf) {
 		// TODO implement
+		std::cout << "reading hand\n";
+		
+		char chars[110], ca;
+		in.getline(chars, 110);
+		Card* card;
+		for (int i = 6; i < in.gcount() - 1; i++) {
+			ca = chars[i];
+			card = ((CardFactory*)cf)->getCard(ca);
+			push_back(card);
+		}
 	};
 	
 	Hand& operator+=(Card* c) {
@@ -44,11 +56,20 @@ public:
 	};
 
 	friend std::ostream& operator<<(std::ostream& os, const Hand& hand) {
+		os << "Hand: ";
 		for (Card* c : hand) {
 			os << *c << " ";
 		}
 		return os;
 	};
+
+	void writeToFile(std::ostream& os) {
+		os << "Hand: ";
+		for (Card* c : *this) {
+			os << *c;
+		}
+		os << "\n";
+	}
 };
 
 #pragma once

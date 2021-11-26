@@ -10,6 +10,7 @@ public:
 	virtual bool isMaxed() = 0;
 	virtual void addCard(Card*) = 0;
 	virtual void discard(DiscardPile& pile) = 0;
+	virtual int size() = 0;
 	virtual std::string getChainName() = 0;
 	virtual void print(std::ostream&) = 0;
 	friend std::ostream& operator<<(std::ostream& os, Chain_Base& chain) {

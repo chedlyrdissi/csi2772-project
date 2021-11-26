@@ -12,6 +12,15 @@ public:
 	
 	TradeArea(std::istream& in, const CardFactory* cf) {
 		// TODO implement
+		std::cout << "reading trade area\n";
+		char chars[110], ca;
+		in.getline(chars, 110);
+		Card* card;
+		for (int i = 11; i < in.gcount() - 1; i++) {
+			ca = chars[i];
+			card = ((CardFactory*)cf)->getCard(ca);
+			cards.push_back(card);
+		}
 	}
 
 	TradeArea& operator+=(Card* c) {
@@ -58,11 +67,20 @@ public:
 	};
 
 	friend std::ostream& operator <<(std::ostream& os, const TradeArea& tradeArea) {
+		os << "TradeArea: ";
 		for (Card* c : tradeArea.cards) {
 			os << *c << " ";
 		}
 		return os;
 	};
+
+	void writeToFile(std::ostream& os) {
+		os << "TradeArea: ";
+		for (Card* c : cards) {
+			os << *c;
+		}
+		os << "\n";
+	}
 };
 
 #pragma once

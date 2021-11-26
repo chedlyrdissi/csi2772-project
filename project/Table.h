@@ -5,9 +5,11 @@
 #include "TradeArea.h"
 #include <string>
 
+#include <iostream>
+
 class Table {
 	Player* players[2];
-	int currentPlayer = 1;
+	int currentPlayer = 0;
 	Deck deck;
 	DiscardPile discardPile;
 	TradeArea tradeArea;
@@ -15,12 +17,16 @@ public:
 	Table(std::string playerName1, std::string playerName2) {
 		players[0] = new Player(playerName1);
 		players[1] = new Player(playerName2);
+		std::cout << &deck << "\n";
 		deck = CardFactory::getFactory()->getDeck();
+		std::cout << &deck << "\n";
+		std::cout << deck;
 	};
 	
 	Table(std::istream& in, const CardFactory* cf) : discardPile(in, cf), tradeArea(in, cf), deck(in, cf) {
 		players[0] = new Player(in, cf);
 		players[1] = new Player(in, cf);
+		std::cout << "reading table\n";
 	};
 
 	~Table() {

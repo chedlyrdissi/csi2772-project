@@ -1,4 +1,4 @@
-#include "Deck.h"
+// #include "Deck.h"
 #include "./card/black.h"
 #include "./card/Red.h"
 #include "./card/Green.h"
@@ -11,71 +11,33 @@
 #include <random>       // std::default_random_engine
 #include <chrono>       // std::chrono::system_clock
 #include <time.h>
+#include <string>
+
+class Deck;
 
 class CardFactory {
-	Deck deck;
+	Deck* deck;
 
-	CardFactory() {
-		init();
-	};
+	const std::string validCards[8] = { "Blue", "Chili", "Stink", "Green", "soy", "black", "Red", "garden" };
+
+	CardFactory();
 	
-	void init() {
-		/*
-			Blue 20
-			Chili 18
-			Stink 16
-			Green 14
-			soy 12
-			black 10
-			Red 8
-			garden 6
-		*/
-		for (int i = 0; i < 20; i++) {
-			deck.push_back(new Blue());
-		}
-		for (int i = 0; i < 18; i++) {
-			deck.push_back(new Chili());
-		}
-		for (int i = 0; i < 16; i++) {
-			deck.push_back(new Stink());
-		}
-		for (int i = 0; i < 14; i++) {
-			deck.push_back(new Green());
-		}
-		for (int i = 0; i < 12; i++) {
-			deck.push_back(new soy());
-		}
-		for (int i = 0; i < 10; i++) {
-			deck.push_back(new black());
-		}
-		for (int i = 0; i < 8; i++) {
-			deck.push_back(new Red());
-		}
-		for (int i = 0; i < 6; i++) {
-			deck.push_back(new garden());
-		}
-	}
-public:
-	static CardFactory* getFactory() {
-		static CardFactory* instance = new CardFactory();
-		return instance;
-	};
+	void init();
 
-	~CardFactory() {
-		for (Card* card : deck) {
-			delete card;
-		}
-	};
+	std::string getNameFromShortName(char shortName);
+
+public:
+	static CardFactory* getFactory();
+
+	~CardFactory();
 	/*
 	 returns a deck with all 104 bean cards.Note that the 104 bean cards are
 		always the same but their order in the deck needs to be different every time.Use
 		std::shuffle to achieve this.
 	*/
-	Deck getDeck() {
-		unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
-		std::shuffle(deck.begin(), deck.end(), std::default_random_engine(seed));
-		return deck;
-	};
+	Deck& getDeck();
+
+	Card* getCard(char cardType);
 };
 
 #pragma once

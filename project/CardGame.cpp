@@ -9,25 +9,104 @@
 
 using namespace std;
 
+
+
+
+
+// define factory
+CardFactory::CardFactory() {
+	deck = new Deck();
+	init();
+};
+
+void CardFactory::init() {
+	/*
+		Blue 20
+		Chili 18
+		Stink 16
+		Green 14
+		soy 12
+		black 10
+		Red 8
+		garden 6
+	*/
+	for (int i = 0; i < 20; i++) {
+		deck->push_back(new Blue());
+	}
+	for (int i = 0; i < 18; i++) {
+		deck->push_back(new Chili());
+	}
+	for (int i = 0; i < 16; i++) {
+		deck->push_back(new Stink());
+	}
+	for (int i = 0; i < 14; i++) {
+		deck->push_back(new Green());
+	}
+	for (int i = 0; i < 12; i++) {
+		deck->push_back(new soy());
+	}
+	for (int i = 0; i < 10; i++) {
+		deck->push_back(new black());
+	}
+	for (int i = 0; i < 8; i++) {
+		deck->push_back(new Red());
+	}
+	for (int i = 0; i < 6; i++) {
+		deck->push_back(new garden());
+	}
+}
+
+std::string CardFactory::getNameFromShortName(char shortName) {
+	for (std::string s : validCards) {
+		if (s[0] == shortName) {
+			return s;
+		}
+	}
+	return ""; // throw error
+}
+
+CardFactory* CardFactory::getFactory() {
+	static CardFactory* instance = new CardFactory();
+	return instance;
+};
+
+CardFactory::~CardFactory() {
+	for (Card* card : *deck) {
+		delete card;
+	}
+	delete deck;
+};
+/*
+	returns a deck with all 104 bean cards.Note that the 104 bean cards are
+	always the same but their order in the deck needs to be different every time.Use
+	std::shuffle to achieve this.
+*/
+Deck& CardFactory::getDeck() {
+	unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::shuffle(deck->begin(), deck->end(), std::default_random_engine(seed));
+	return *deck;
+};
+
+Card* CardFactory::getCard(char cardType) {
+	Card* c = NULL;
+	for (int i = 0; i < deck->size(); i++) {
+		if ((*deck)[i]->getName().compare(getNameFromShortName(cardType)) == 0) {
+			c = (*deck)[i];
+			deck->erase(deck->begin() + i);
+			break;
+		}
+	}
+	// TODO throw corrupt save file error
+	return c;
+}
+
+
+
+
+
+
+
 const string validCards[8] = { "Blue", "Chili", "Stink", "Green", "soy", "black", "Red", "garden" };
-
-// const char validCards[8] = { 'B', 'C', 'S', 'G', 's', 'b', 'R', 'g' };
-
-Chain<Blue>* createChainBlue() { return new Chain<Blue>(); }
-
-Chain<Chili>* createChainChili() { return new Chain<Chili>(); }
-
-Chain<Stink>* createChainStink() { return new Chain<Stink>(); }
-
-Chain<Green>* createChainGreen() { return new Chain<Green>(); }
-
-Chain<soy>* createChainsoy() { return new Chain<soy>(); }
-
-Chain<black>* createChainblack() { return new Chain<black>(); }
-
-Chain<Red>* createChainRed() { return new Chain<Red>(); }
-
-Chain<garden>* createChaingarden() { return new Chain<garden>(); }
 
 string getInputPlayerName(int player) {
 	cout << "Please enter the name of player " << player << endl;
@@ -103,7 +182,31 @@ bool saveAndExitMenu() {
 	return c == '2';
 }
 
-void saveAndExit() {}
+void saveAndExit(Table& table) {
+	string pathToFile;
+	ofstream saveFile;
+
+	cout << "Please input the save file name: ";
+	cin >> pathToFile;
+	saveFile.open(pathToFile);
+	
+	// write deck
+	table.getDeck().writeToFile(saveFile);
+	// write discard pile
+	table.getDiscardPile().writeToFile(saveFile);
+	// write trade area
+	table.getTradeArea().writeToFile(saveFile);
+	// write player 1
+	table.getPlayer(0).writeToFile(saveFile);
+	// write hand
+	// write chains
+	// write player 2
+	table.getPlayer(1).writeToFile(saveFile);
+	// write hand
+	// write chains
+
+	saveFile.close();
+}
 
 bool isValidCard(char card) {
 	for (string s: validCards) {
@@ -146,34 +249,6 @@ bool getTradeAreaCardChoice(const string& cardType) {
 	return c == '1';
 }
 
-int createChain(string cardType, Player* player, Card* c) {
-	if (cardType.compare("Blue") == 0) {
-		return (*player).addChain(createChainBlue(), c);
-	}
-	if (cardType.compare("Chili") == 0) {
-		return (*player).addChain(createChainChili(), c);
-	}
-	if (cardType.compare("Stink") == 0) {
-		return (*player).addChain(createChainStink(), c);
-	}
-	if (cardType.compare("Green") == 0) {
-		return (*player).addChain(createChainGreen(), c);
-	}
-	if (cardType.compare("soy") == 0) {
-		return (*player).addChain(createChainsoy(), c);
-	};
-	if (cardType.compare("black") == 0) {
-		return (*player).addChain(createChainblack(), c);
-	}
-	if (cardType.compare("Red") == 0) {
-		return (*player).addChain(createChainRed(), c);
-	}
-	if (cardType.compare("garden") == 0) {
-		return (*player).addChain(createChaingarden(), c);
-	}
-	return -1;
-}
-
 Card* addToChainIfPossible(Player* player, Card* card) {
 	// parse chains to add card
 	for (int i = 0; i < player->getNumChains(); i++) {
@@ -184,7 +259,7 @@ Card* addToChainIfPossible(Player* player, Card* card) {
 	}
 
 	if (card != NULL && player->getNumChains() != player->getMaxNumChains()) {
-		createChain(card->getName(), player, card);
+		player->createChain(card);
 		card = NULL;
 	}
 
@@ -251,15 +326,17 @@ int main() {
 	else {
 		table = resumeGame();
 	}
+
 	Card* tradeAreaCard = NULL, *handCard;
 	string selected;
 	Player* player;
 	int chainToHarvest, ichain, iCardToDiscardFromHand;
 	bool playerWantToPlay;
+
 	while (table->getDeck().size()) {
 		// if pause save game to file and exit
 		if (saveAndExitMenu()) {
-			saveAndExit();
+			saveAndExit(*table);
 			break;
 		}
 		for (int iplayer = 0; iplayer < 2; iplayer++) {
@@ -287,7 +364,7 @@ int main() {
 						if (player->getNumChains() < player->getMaxNumChains()) {
 							// create new chain
 							cout << "Creating new chain\n";
-							createChain(tradeAreaCard->getName(), player, tradeAreaCard);
+							player->createChain(tradeAreaCard);
 							cout << endl << *player << endl << endl;
 						}
 						else {
@@ -333,7 +410,7 @@ int main() {
 					}
 					// create chain with card
 					cout << "Creating new chain\n";
-					createChain(handCard->getName(), player, handCard);
+					player->createChain(handCard);
 					cout << endl << *player << endl << endl;
 				}
 
