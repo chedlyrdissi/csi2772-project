@@ -17,16 +17,12 @@ public:
 	Table(std::string playerName1, std::string playerName2) {
 		players[0] = new Player(playerName1);
 		players[1] = new Player(playerName2);
-		std::cout << &deck << "\n";
 		deck = CardFactory::getFactory()->getDeck();
-		std::cout << &deck << "\n";
-		std::cout << deck;
 	};
 	
 	Table(std::istream& in, const CardFactory* cf) : discardPile(in, cf), tradeArea(in, cf), deck(in, cf) {
 		players[0] = new Player(in, cf);
 		players[1] = new Player(in, cf);
-		std::cout << "reading table\n";
 	};
 
 	~Table() {
@@ -68,7 +64,6 @@ public:
 	}
 	
 	bool win(const std::string& playerName) {
-		// TODO implement
 		int player;
 		if (players[0]->getName().compare(playerName) == 0) {
 			player = 0;
@@ -88,7 +83,8 @@ public:
 		os << *(table.players[0]) << std::endl;
 		os << *(table.players[1]) << std::endl;
 		table.discardPile.print(os);
-		os << "Trade Area: " << table.tradeArea;
+		os << std::endl;
+		os << table.tradeArea;
 		os << "\n-------------------------------------------------------------------------------\n";
 		return os;
 	};

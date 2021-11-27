@@ -24,15 +24,6 @@ public:
 	};
 
 	Player(std::istream& in, const CardFactory* cf) {
-		// TODO implement
-		std::cout << "reading player\n";
-
-		/*
-		os << "Player: " << name << "\n";
-		os << "coins: " << coins << "\n";
-		os << "nChains: " << nChains << "\n";
-		os << "maxChains: " << maxChains << "\n";
-		*/
 		char buf[256];
 		std::string bufs;
 		
@@ -48,7 +39,7 @@ public:
 		in.getline(buf, 256); // read nChains
 		bufs = "";
 		for (int i = 9; i < in.gcount() - 1; i++) bufs += buf[i]; // create nchains
-		int bufnChains = std::stoi(bufs);
+		nChains = std::stoi(bufs);
 		
 		in.getline(buf, 256); // read maxChains
 		bufs = "";
@@ -57,22 +48,23 @@ public:
 
 		hand = new Hand(in, cf);
 		// create chains
-		Card* card;
-		for (int i = 0; i < bufnChains; i++) {
-			in.getline(buf, 256); // read chain
-			if (in.gcount() <= 7) {
-				// error
-			}
-			std::cout << buf[7] << "\n";
-			card = ((CardFactory*)cf)->getCard(buf[7]);
-			createChain(card);
-			for (int j = 8; j < in.gcount() - 1; j++) {
-				card = ((CardFactory*)cf)->getCard(buf[7]);
-				chains[i]->addCard(card);
+		char type;
+		for (int i = 0; i < nChains; i++) {
+			// create chain
+			// addit
+			in.get(type);
+			in.get(); // jump the space
+			switch (type) {
+				case 'B': chains[i] = new Chain<Blue>(in, cf); break;
+				case 'b': chains[i] = new Chain<black>(in, cf); break;
+				case 'R': chains[i] = new Chain<Red>(in, cf); break;
+				case 'G': chains[i] = new Chain<Green>(in, cf); break;
+				case 'g': chains[i] = new Chain<garden>(in, cf); break;
+				case 's': chains[i] = new Chain<soy>(in, cf); break;
+				case 'S': chains[i] = new Chain<Stink>(in, cf); break;
+				case 'C': chains[i] = new Chain<Chili>(in, cf); break;
 			}
 		}
-		
-		std::cout << "reading chains\n";
 	};
 
 
@@ -155,6 +147,27 @@ public:
 		return nChains;
 	}
 
+	int canAddCard(Card* card) {
+		for (Chain_Base* chain : chains) {
+			if (chain != NULL && chain->getChainName().compare(card->getName()) == 0) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	void addToChain(Card* card) {
+		if (card != NULL && canAddCard(card)) {
+			for (Chain_Base* chain : chains) {
+				if (chain != NULL && chain->getChainName().compare(card->getName()) == 0) {
+					*chain += card;
+					return;
+				}
+			}
+		}
+		// TODO throw error
+	}
+
 	void setNumChains(int nChains) {
 		assert(nChains <= this->maxChains);
 		this->nChains = nChains;
@@ -224,9 +237,7 @@ public:
 		hand->writeToFile(os);
 		// write chain to file
 		for (int i = 0; i < nChains; i++) {
-			os << "chain: ";
-			for (int j = 0; j < chains[i]->size(); j++) os << chains[i]->getChainName()[0];
-			os << "\n";
+			chains[i]->writeToFile(os);
 		}
 	}
 };

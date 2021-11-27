@@ -12,9 +12,6 @@ public:
 	Hand() {};
 	
 	Hand(std::istream& in, const CardFactory* cf) {
-		// TODO implement
-		std::cout << "reading hand\n";
-		
 		char chars[110], ca;
 		in.getline(chars, 110);
 		Card* card;
@@ -26,20 +23,17 @@ public:
 	};
 	
 	Hand& operator+=(Card* c) {
-		// cards.push_back(c);
 		push_back(c);
 		return *this;
 	};
 	
 	Card* play() {
 		Card* card = top();
-		// cards.pop_front();
 		pop_front();
 		return card;
 	};
 
 	Card* top() {
-		// return cards.front();
 		return front();
 	};
 	

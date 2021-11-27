@@ -11,8 +11,6 @@ class Deck : public std::vector<Card*> {
 public:
 	Deck() {};
 	Deck(std::istream& in, const CardFactory* cf) {
-		// TODO import deck from file
-		std::cout << "reading deck\n";
 		char chars[110], ca;
 		in.getline(chars, 110);
 		Card* card;

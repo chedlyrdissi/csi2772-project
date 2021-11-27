@@ -1,21 +1,19 @@
 ﻿  CardGame.cpp
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\Hand.h(47,3): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\Player.h(80,1): warning C4154: deletion of an array expression; conversion to pointer supplied
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\TradeArea.h(54,3): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\Hand.h(41,3): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\Player.h(72,1): warning C4154: deletion of an array expression; conversion to pointer supplied
 C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(85,20): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
           with
           [
               _Rep=std::chrono::system_clock::rep
           ]
 C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(92,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(283,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(285,21): warning C4018: '>=': signed/unsigned mismatch
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(333,7): warning C4101: 'playerWantToPlay': unreferenced local variable
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(332,6): warning C4101: 'chainToHarvest': unreferenced local variable
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(332,30): warning C4101: 'iCardToDiscardFromHand': unreferenced local variable
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(332,22): warning C4101: 'ichain': unreferenced local variable
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(329,31): warning C4101: 'handCard': unreferenced local variable
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(331,10): warning C4101: 'player': unreferenced local variable
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\chain\Chain.h(56,22): warning C4018: '>=': signed/unsigned mismatch
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\chain\Chain.h(49): message : while compiling class template member function 'int Chain<garden>::sell(void)'
-C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\Player.h(119): message : see reference to class template instantiation 'Chain<garden>' being compiled
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(255,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(257,20): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(350,7): warning C4101: 'playerWantToPlay': unreferenced local variable
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(349,6): warning C4101: 'chainToHarvest': unreferenced local variable
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\CardGame.cpp(349,22): warning C4101: 'ichain': unreferenced local variable
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\chain\Chain.h(60,22): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\chain\Chain.h(53): message : while compiling class template member function 'int Chain<Chili>::sell(void)'
+C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\project\Player.h(65): message : see reference to class template instantiation 'Chain<Chili>' being compiled
   project.vcxproj -> C:\Users\Asus\OneDrive\uottawa\4th_year\fall\csi2772\labs\project\Debug\project.exe

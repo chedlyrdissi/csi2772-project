@@ -8,8 +8,6 @@ class DiscardPile: public std::vector<Card*> {
 public:
 	DiscardPile() {};
 	DiscardPile(std::istream& in, const CardFactory* cf) {
-		// TODO implement 
-		std::cout << "reading discard pile\n";
 		char chars[110], ca;
 		in.getline(chars, 110);
 		Card* card;
@@ -29,6 +27,7 @@ public:
 		return c;
 	};
 	Card* top() {
+		if (empty()) return NULL;
 		return back();
 	}
 	void print(std::ostream& os) {

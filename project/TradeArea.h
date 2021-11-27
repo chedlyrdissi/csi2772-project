@@ -1,7 +1,9 @@
 #include "CardFactory.h"
+#include "DiscardPile.h"
 #include "./card/Card.h"
 #include <iostream>
 #include <list>
+#include <iterator>
 #include <string>
 
 class TradeArea {
@@ -11,8 +13,6 @@ public:
 	TradeArea() {};
 	
 	TradeArea(std::istream& in, const CardFactory* cf) {
-		// TODO implement
-		std::cout << "reading trade area\n";
 		char chars[110], ca;
 		in.getline(chars, 110);
 		Card* card;
@@ -23,10 +23,23 @@ public:
 		}
 	}
 
+	~TradeArea() {
+		for (Card* c : cards) {
+			delete c;
+		}
+	}
+
 	TradeArea& operator+=(Card* c) {
 		cards.push_back(c);
 		return *this;
 	};
+
+	void discardAll(DiscardPile& pile) {
+		for (Card* c : cards) {
+			pile += c;
+		}
+		cards.clear();
+	}
 
 	bool legal(Card* card) {
 		for (Card* c : cards) {
@@ -37,12 +50,12 @@ public:
 		return false;
 	}
 
-	/*
 	Card* operator[](int i) {
 		assert(i >= 0 && i < cards.size());
-		return cards[i];
+		auto c = cards.begin();
+		std::advance(c, i);
+		return *c;
 	}
-	*/
 
 	std::list<Card*>& getList() {
 		return cards;

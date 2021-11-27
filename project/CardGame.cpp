@@ -124,6 +124,7 @@ Table* initGame() {
 			table->getPlayer(i).getHand() += table->getDeck().draw();
 		}
 	}
+	cout << "New Game Starting" << endl << endl;
 	return table;
 }
 
@@ -148,6 +149,7 @@ Table* resumeGame() {
 	}
 	saveFile->close();
 	delete saveFile;
+	cout << "Resuming Game" << endl << endl;
 	return newTable;
 }
 
@@ -186,7 +188,7 @@ void saveAndExit(Table& table) {
 	string pathToFile;
 	ofstream saveFile;
 
-	cout << "Please input the save file name: ";
+	cout << "Please input the save file path and name: ";
 	cin >> pathToFile;
 	saveFile.open(pathToFile);
 	
@@ -198,14 +200,12 @@ void saveAndExit(Table& table) {
 	table.getTradeArea().writeToFile(saveFile);
 	// write player 1
 	table.getPlayer(0).writeToFile(saveFile);
-	// write hand
-	// write chains
 	// write player 2
 	table.getPlayer(1).writeToFile(saveFile);
-	// write hand
-	// write chains
 
 	saveFile.close();
+	cout << "Game Saved" << endl;
+	cout << "Exiting";
 }
 
 bool isValidCard(char card) {
@@ -235,69 +235,44 @@ string getTradeAreaCard() {
 	return cardCharToString(input);
 }
 
-/*
-* true to add card to chain
-*/
-bool getTradeAreaCardChoice(const string& cardType) {
-	char c = ' ';
-	while (c != '1' && c != '2') {
-		cout << "What would you like to do with this card: " << cardType << endl;
-		cout << "\t1) add to chain(s)" << endl;
-		cout << "\t2) discard" << endl;
-		cin >> c;
-	}
-	return c == '1';
-}
-
-Card* addToChainIfPossible(Player* player, Card* card) {
-	// parse chains to add card
-	for (int i = 0; i < player->getNumChains(); i++) {
-		if (card != NULL && (*player)[i].getChainName().compare(card->getName()) == 0) {
-			(*player)[i].addCard(card);
-			card = NULL;
-		}
-	}
-
-	if (card != NULL && player->getNumChains() != player->getMaxNumChains()) {
-		player->createChain(card);
-		card = NULL;
-	}
-
-	return card;
+int continueDrawingFromTradeArea() {
+	char input;
+	cout << "Draw From Trade Area (y?)" << endl;
+	cin >> input;
+	return input == 'y';
 }
 
 bool playerWantToPlayMenu() {
-	char c = ' ';
-	while (c != '2' && c != '1') {
-		cout << "Would you like to continue playing your hand: " << endl;
-		cout << "\t1) Continue\n";
-		cout << "\t2) Do not continue\n";
-		cin >> c;
-	}
-	return c == '1';
+	char c;
+	cout << "Would you like to continue playing your hand (y?): ";
+	cin >> c;
+	return c == 'y';
 }
 
-int discardCardIndexFromHandMenu(Hand& hand) {
-	int i = -2;
-	cout << hand << endl;
+int discardCardFromHandMenu(Hand& hand) {
+	int i = -1;
+	cout << hand << endl << "      ";
 	for (int j = 0; j < hand.size(); j++) cout << j << " ";
 	cout << endl;
-	while (i < -1 && i >= hand.size()) {
-		cout << "Please input a card index to discard : ";
+	while (i < 0 && i >= hand.size()) {
+		cout << "Please input a valid card index to discard : ";
 		cin >> i;
 	}
 	return i;
 }
 
+int wantToDiscardFromHandMenu(Player* player) {
+	cout << "Player " << player->getName() << ", would you like to discard a card from your hand (y?)?";
+	char input;
+	cin >> input;
+	return input == 'y';
+}
+
 bool chainOrLeaveMenu(const string& card) {
-	char c = ' ';
-	while (c != '2' && c != '1') {
-		cout << "Would you like to chain this card : ( " << card << " )" << endl;
-		cout << "\t1) yes\n";
-		cout << "\t2) no\n";
-		cin >> c;
-	}
-	return c == '1';
+	char c;
+	cout << "Would you like to chain this card : " << card << " (y?) ? ";
+	cin >> c;
+	return c == 'y';
 }
 
 void sellMaxedChain(Player* player, DiscardPile& pile) {
@@ -305,15 +280,56 @@ void sellMaxedChain(Player* player, DiscardPile& pile) {
 	int ichain = 0;
 	while (ichain < player->getNumChains()) {
 		if ((*player)[ichain].isMaxed()) {
-			cout << "chain maxed out " << (*player)[ichain] << " => Harvesting" << endl;
+			cout << "chain " << (*player)[ichain] << " maxed out\nHarvesting" << endl;
 			// chain ended => sell it
 			player->sellChain(ichain, pile);
+			continue;
 		}
-		else {
-			// move to next chain
-			ichain++;
-		}
+		// move to next chain
+		ichain++;
 	}
+}
+
+int expandSlotsMenu(Player* player) {
+	if (player->getNumCoins() < 3) return 0;
+	if (player->getMaxNumChains() == 3) return 0;
+	cout << "Would you like to buy a new slot for your chains (y?)";
+	char input;
+	cin >> input;
+	if (input != 'y') return 0;
+	player->buyThirdChain();
+	return 1;
+}
+
+void harvestMenu(Player* player, DiscardPile& pile) {
+	cout << "Harvest Time" << endl;
+	cout << *player << endl;
+	cout << "Please select a chain to harvest (1 to " << player->getNumChains() << ") ";
+	char c;
+	bool v;
+	do {
+		cin >> c;
+		v = (c <= '0' || c > char(48 + player->getNumChains()));
+	} while (v);
+	int harvestIndex = (c - '0') - 1;
+	player->sellChain(harvestIndex, pile);
+}
+
+void playCard(Player* player, Card* card, DiscardPile& pile) {
+	// check if player has the corresponding chain
+	if (player->canAddCard(card)) {
+		// add it
+		player->addToChain(card);
+		return;
+	}
+	// offer to buy extra if player has no empty slot
+	if (player->getMaxNumChains() == player->getNumChains() && !expandSlotsMenu(player)) {
+		// harvest
+		harvestMenu(player, pile);
+	}
+	// create new chain with card
+	player->createChain(card);
+	cout << *player << endl;
 }
 
 int main() {
@@ -327,7 +343,7 @@ int main() {
 		table = resumeGame();
 	}
 
-	Card* tradeAreaCard = NULL, *handCard;
+	Card* tradeAreaCard = NULL, *handCard = NULL;
 	string selected;
 	Player* player;
 	int chainToHarvest, ichain, iCardToDiscardFromHand;
@@ -337,110 +353,61 @@ int main() {
 		// if pause save game to file and exit
 		if (saveAndExitMenu()) {
 			saveAndExit(*table);
-			break;
+			return 0;
 		}
 		for (int iplayer = 0; iplayer < 2; iplayer++) {
 			player = table->nextPlayer();
 			cout << endl << *table << endl;
+			cout << "\n\t\t\t ~~~ Player " << player->getName() << "'s turn ~~~ \t\t\t" << endl << endl;
 			player->getHand() += table->getDeck().draw();
 
-			// check trade area
-			while (table->getTradeArea().numCards() != 0 ) {
-				cout << "Hand of " << player->getName() << ": ";
-				player->printHand(cout, true);
-				cout << endl << endl;
-				// Add bean cards from the TradeArea to chains or discard them.
-				while (tradeAreaCard == NULL) {
-					selected = getTradeAreaCard();
-					tradeAreaCard = table->getTradeArea().trade(selected);
-				}
-				
-				if (getTradeAreaCardChoice(tradeAreaCard->getName())) {
-					// add to chain if possible
-					tradeAreaCard = addToChainIfPossible(player, tradeAreaCard);
-					// check if chain ended TODO check if this is valid
-					sellMaxedChain(player, table->getDiscardPile());
-					if (tradeAreaCard != NULL) {
-						if (player->getNumChains() < player->getMaxNumChains()) {
-							// create new chain
-							cout << "Creating new chain\n";
-							player->createChain(tradeAreaCard);
-							cout << endl << *player << endl << endl;
-						}
-						else {
-							// cards can't be added to the chains, harvest
-							chainToHarvest = discardChainMenu(player->getNumChains());
-							cout << "Harvesting " << chainToHarvest << endl;
-							player->sellChain(chainToHarvest, table->getDiscardPile());
-							tradeAreaCard = addToChainIfPossible(player, tradeAreaCard);
-						}
-					}
-				}
-				else {
-					// discard card
-					table->getDiscardPile() += tradeAreaCard;
-					tradeAreaCard = NULL;
-				}
+			if (table->getTradeArea().numCards() != 0) {
+				cout << "Trade Area has cards\n";
+				cout << "You can select cards to add to your chains, all leftover cards are discarded.";
+				do {
+					// ask if wants to select cards from trade area
+					tradeAreaCard = table->getTradeArea().trade(getTradeAreaCard());
+					// if tradeAreaCard null, invalid choice
+					if (tradeAreaCard == NULL) continue;
+					// play card
+					playCard(player, tradeAreaCard, table->getDiscardPile());
+				} while (continueDrawingFromTradeArea() && table->getTradeArea().numCards() != 0);
+				table->getTradeArea().discardAll(table->getDiscardPile()); // discard leftovers
+				tradeAreaCard = NULL; // clean up
 			}
 			
-			do {
-				player->getHand() += table->getDeck().draw();
-				cout << "Hand of " << player->getName() << ": ";
-				player->printHand(cout, true);
-				cout << endl << endl;
+			handCard = player->getHand().play();
+			cout << "Playing card: " << *handCard << endl;
+			playCard(player, handCard, table->getDiscardPile());
+
+			// check if chain ended
+			sellMaxedChain(player, table->getDiscardPile());
+
+			player->printHand(cout, true);
+			cout << endl;
+			// check if player wants to play again
+			if (playerWantToPlayMenu()) {
 				handCard = player->getHand().play();
-				cout << "Card to play : " << *handCard << endl << endl;
-				// check if chain ended
-				sellMaxedChain(player, table->getDiscardPile());
+				cout << "Playing card: " << *handCard << endl;
+				playCard(player, handCard, table->getDiscardPile());
+			}
 
-				// parse chains to add card
-				handCard = addToChainIfPossible(player, handCard);
-				// check if chain ended TODO check if this is valid
-				sellMaxedChain(player, table->getDiscardPile());
+			// check if chain ended
+			sellMaxedChain(player, table->getDiscardPile());
 
-				if (handCard != NULL) {
-					// card can't be added to existing chain
-					cout << "Card " << *handCard << " can't be added to existing chains\n";
-					if (player->getNumChains() == player->getMaxNumChains()) {
-						// has no empty slots
-						// ask player which chain to discard
-						chainToHarvest = discardChainMenu(player->getNumChains());
-						cout << "chainToHarvest " << chainToHarvest << endl;
-						player->sellChain(chainToHarvest, table->getDiscardPile());
-					}
-					// create chain with card
-					cout << "Creating new chain\n";
-					player->createChain(handCard);
-					cout << endl << *player << endl << endl;
-				}
-
-				// show player hand
-				cout << endl << *player << endl << endl;
-
-				// check if player wants to continue playing his hand
-				cout << endl;
-				cout << "Hand of " << player->getName() << ": ";
-				player->printHand(cout, true);
-				cout << endl;
-				playerWantToPlay = playerWantToPlayMenu();
-				cout << endl;
-			} while (playerWantToPlay);
-			
-			// give choice to discard a card
-			cout << endl;
-			iCardToDiscardFromHand = discardCardIndexFromHandMenu(player->getHand());
-			cout << endl;
-			if (iCardToDiscardFromHand != -1) {
+			if (wantToDiscardFromHandMenu(player)) {
+				// give choice to discard a card
+				iCardToDiscardFromHand = discardCardFromHandMenu(player->getHand());
+				// cout << endl;
 				handCard = player->getHand()[iCardToDiscardFromHand];
-				player->getHand().remove(handCard);
-				table->getDiscardPile() += handCard;
-				handCard = NULL;
-				player->printHand(cout, true);
+				player->getHand().remove(handCard); // remove from player's hand
+				table->getDiscardPile() += handCard; // add to discard pile
+				handCard = NULL; // clean up
 				cout << endl;
 			}
 
 			// add 3 cards from deck to trade area
-			cout << "Drawing 3 cards from deck to trade area\n";
+			cout << endl << "Adding 3 cards from deck to trade area\n";
 			for (int i = 0; i < 3; i++) {
 				if (table->getDeck().size() > 0) {
 					tradeAreaCard = table->getDeck().draw();
@@ -449,10 +416,11 @@ int main() {
 					tradeAreaCard = NULL;
 				}
 			}
+			cout << endl;
 
 			// add cards from discard pile to trade area
-			cout << "adding cards from discard pile to trade area" << endl << endl;
-			while (table->getTradeArea().legal(table->getDiscardPile().top())) {
+			cout << "Adding cards from discard pile to trade area if possible" << endl;
+			while (table->getDiscardPile().top() != NULL && table->getTradeArea().legal(table->getDiscardPile().top())) {
 				cout << table->getDiscardPile() << endl;
 				tradeAreaCard = table->getDiscardPile().pickUp();
 				table->getTradeArea() += tradeAreaCard;
@@ -461,13 +429,14 @@ int main() {
 
 			// parse trade area
 			cout << table->getTradeArea() << endl;
-			for (Card* c : table->getTradeArea().getList()) {
-				if (chainOrLeaveMenu(c->getName())) {
-					// TODO check if you can harvest
-					addToChainIfPossible(player, c);
-					// check if chain ended TODO check if this is valid
-					sellMaxedChain(player, table->getDiscardPile());
+			for (int i = 0; i < table->getTradeArea().numCards();) {
+				tradeAreaCard = table->getTradeArea()[i];
+				if (chainOrLeaveMenu(tradeAreaCard->getName())) {
+					table->getTradeArea().trade(tradeAreaCard->getName());
+					playCard(player, tradeAreaCard, table->getDiscardPile());
+					continue;
 				}
+				i++;
 			}
 
 			// draws 2 cards
@@ -475,17 +444,19 @@ int main() {
 			for (int i = 0; i < 2; i++) {
 				if (table->getDeck().size() > 0) {
 					handCard = table->getDeck().draw();
-					cout << "Drew " << handCard->getName() << " From Deck, adding to hand" << endl;
+					cout << "Drew " << handCard->getName() << " From Deck, adding to Hand" << endl;
 					player->getHand() += handCard;
 					handCard = NULL;
 				}
 			}
 		}
 	}
+
 	// check winner
 	Player player1 = table->getPlayer(0);
 	Player player2 = table->getPlayer(1);
-	cout << "THE GAME IS OVER\n";
+	cout << "GAME OVER\n";
 	cout << "\tPlayer 1: " << (table->win(player1.getName())? "wins": "loses") << "\n";
 	cout << "\tPlayer 2: " << (table->win(player2.getName()) ? "wins" : "loses") << "\n";
+	return 0;
 }

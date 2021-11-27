@@ -15,8 +15,16 @@ public:
 	Chain() {}
 	
 	Chain(std::istream& in, const CardFactory* cf) {
-		// TODO implement
-		std::cout << "reading chain\n";
+		char buf[256];
+		Card* card;
+		in.getline(buf, 256); // read chain
+		if (in.gcount() <= 7) {
+			// TODO error
+		}
+		for (int j = 7; j < in.gcount() - 1; j++) {
+			card = ((CardFactory*)cf)->getCard(buf[7]);
+			addCard(card);
+		}
 	}
 
 	int size() {
@@ -38,11 +46,7 @@ public:
 	}
 
 	Chain<T>& operator+=(Card* c) {
-		T* t = dynamic_cast<const T*>(c);
-		if (t == nullptr) {
-			throw IllegalType();
-		}
-		cards.push_back(t);
+		addCard(c);
 		return *this;
 	}
 	
@@ -86,6 +90,14 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, Chain<T>& chain) {
 		chain.print(os);
 		return os;
+	}
+
+	void writeToFile(std::ostream& os) {
+		os << getChainName()[0] << " chain: ";
+		for (Card* c : cards) {
+			os << *c;
+		}
+		os << "\n";
 	}
 };
 
